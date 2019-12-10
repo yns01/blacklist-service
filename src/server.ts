@@ -3,7 +3,6 @@ import { promisify } from 'util'
 import http from 'http'
 import stoppable, { StoppableServer } from 'stoppable'
 import { app } from './app'
-import { createOpsApp } from './app.ops'
 import { logger } from './lib/logger'
 import { redis } from './storage'
 
@@ -16,14 +15,10 @@ const port = process.env.PORT || '3000'
 app.set('port', port)
 
 /**
- * Create HTTP app and ops servers.
+ * Create HTTP app server.
  */
 
 const appServer = stoppable(http.createServer(app), defaultTerminationGracePeriods)
-const opsServer = stoppable(
-  http.createServer(createOpsApp(appServer)),
-  defaultTerminationGracePeriods
-)
 
 /**
  * Event listener for HTTP server "error" event.
@@ -64,14 +59,10 @@ const onListening = (serverName: string, server: StoppableServer) => () => {
 appServer.on('error', onError('appServer'))
 appServer.on('listening', onListening('appServer', appServer))
 
-opsServer.on('error', onError('opsServer'))
-opsServer.on('listening', onListening('opsServer', opsServer))
-
 redis
   .connect()
   .then(() => {
     appServer.listen(port)
-    opsServer.listen(process.env.OPS_PORT || '8081')
   })
   .catch(err => {
     logger.error('Could not open database connection', err)
@@ -92,10 +83,9 @@ const handleSignal = (signal: string) => () => {
   logger.warn(`Got ${signal}. Graceful shutdown start`, new Date().toISOString())
 
   try {
-    const stopOpsServer = promisify(opsServer.stop)
     const stopAppServer = promisify(appServer.stop)
 
-    Promise.all([stopOpsServer(), stopAppServer()])
+    stopAppServer()
       .then(() => {
         logger.warn('Successful graceful shutdown', new Date().toISOString())
         process.exit(0)
