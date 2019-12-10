@@ -8,8 +8,6 @@ const redis: RedisOptions = {
   port: Number(process.env.REDIS_PORT) || 6379,
   password: process.env.REDIS_PASSWORD || '',
   lazyConnect: true,
-  // TODO: Reconnect options
-  // TODO: onError cb
 }
 
 export const config = {

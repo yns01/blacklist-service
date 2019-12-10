@@ -68,7 +68,6 @@ export async function storeBlacklist(blacklistProvider: BlacklistProvider) {
   const listManager = ListManager.getInstance()
   const list = listManager.generateNewVersion(blacklistProvider.source)
 
-  // TODO: Implement batches of 10k max
   const pipeline = redis.pipeline()
   blacklistProvider.entries.forEach(entry => {
     pipeline.zadd(
