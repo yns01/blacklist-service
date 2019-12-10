@@ -1,0 +1,22 @@
+version: '3'
+services:
+  inmem:
+    image: 'redis:latest'
+    ports:
+      - '6379:6379'
+  api:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    ports:
+      - '3001:3001'
+      - '8001:8001'
+    depends_on:
+      - inmem
+    environment:
+      PORT: '${PORT}'
+      OPS_PORT: ${OPS_PORT}
+      LOG_LEVEL: ${LOG_LEVEL}
+      REDIS_HOST: inmem
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}

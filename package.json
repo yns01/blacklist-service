@@ -1,0 +1,81 @@
+{
+  "name": "blacklist-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "NODE_ENV=production tsc",
+    "build:dev": "NODE_ENV=development tsc --watch",
+    "lint": "tsc --noEmit && eslint --ext .ts ./src",
+    "lint:format": "prettier --write 'src/**/*.+(ts)'",
+    "dev": "NODE_ENV=development ts-node-dev --respawn --transpileOnly ./src/server.ts",
+    "start": "NODE_ENV=production node ./build/server.js",
+    "test": "jest --coverage --verbose",
+    "docker:redis:start": "docker run  -d -p 6379:6379 redis"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "yarn build"
+    }
+  },
+  "lint-staged": {
+    "*.+(ts)": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "jest": {
+    "verbose": true,
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testPathIgnorePatterns": [
+      "/(build)/"
+    ],
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.2",
+    "@types/ioredis": "^4.0.21",
+    "@types/jest": "^24.0.23",
+    "@types/netmask": "^1.0.30",
+    "@types/stoppable": "^1.1.0",
+    "@typescript-eslint/eslint-plugin": "^2.8.0",
+    "@typescript-eslint/parser": "^2.8.0",
+    "eslint": "^6.7.1",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "husky": "^3.1.0",
+    "jest": "^24.9.0",
+    "lint-staged": "^9.5.0",
+    "prettier": "^1.19.1",
+    "ts-jest": "^24.2.0",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "typescript": "^3.7.2"
+  },
+  "dependencies": {
+    "@types/axios": "^0.14.0",
+    "axios": "^0.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "http-status-codes": "^1.4.0",
+    "ioredis": "^4.14.1",
+    "netmask": "^1.0.6",
+    "prom-client": "^11.5.3",
+    "request": "^2.88.0",
+    "stoppable": "^1.1.0",
+    "winston": "^3.2.1"
+  }
+}
