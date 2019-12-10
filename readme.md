@@ -1,7 +1,7 @@
 # Blacklist service
 
 
-The service provides the possibility to check if an IP is un-trusted.
+This is the MVP of a service which the possibility to check if an IP is un-trusted.
 As a source for the un-trusted IP address, we will use Firehol’s public list hosted on [GitHub](https://github.com/firehol/blocklist-ipsets). The service will update itself at a defined frequency to fetch the latest data from Firehol’s.
 
 
@@ -66,14 +66,6 @@ curl -X GET \
 ## Self update
 Just create a cron job to call the update endpoint
 
-## Limitations / Missing / ToDos
-- For now, the service allows to update only one list at a time.
-- List names containing a dash (-) will not work.
-- Since we create a new Redis set per update, it would be a good idea to add a TTL to the sets to avoid having useless keys.
-- Some of the lists are quite big, so I used the pipeline option. However, we should still have batches of 10k.
-- The member of the sets contains the original list name which is redundant with the set name itself.
-- Many tests are missing. The more critical ones being the services and the data fetching logic. End to end would be nice.
-- We are not using any API key to call GitHub, that might be a problem.
 
 ## How does it work?
 
