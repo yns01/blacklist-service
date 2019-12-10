@@ -74,3 +74,45 @@ Just create a cron job to call the update endpoint
 - The member of the sets contains the original list name which is redundant with the set name itself.
 - Many tests are missing. The more critical ones being the services and the data fetching logic. End to end would be nice.
 - We are not using any API key to call GitHub, that might be a problem.
+
+## How does it work?
+
+Since Redis has no support for network lookups, we will make use of sorted sets. Each entry from the black list file will be added as a member of a Redis sorted set and assigned a score set to the highest IP range.
+Using the instruction `ZRANGEBYSCORE`, we can find if the IP is present in the set
+
+Given the network `1.1.1.0/30`, namely from firehol_level1 list
+The first IP is 1.1.1.0 and the last is `1.1.1.3`. Converting them to integers yields `16843008` and `16843011`.
+
+```bash
+# Add range 1.1.1.0 to 1.1.1.3
+zadd ip-blacklist-ranges 16843011 "ip-16843008-16843011-firehol_level1"
+```
+
+```bash
+# Add range 1.1.2.0 to 1.1.2.3
+zadd ip-blacklist-ranges 16843267 "ip-16843264-16843267-firehol_level1"
+```
+
+```bash
+# Check if 1.1.1.1 is present in one of the ranges (it is)
+ZRANGEBYSCORE ip-blacklist-ranges 16843009 +inf limit 0 1
+> 1) "ip-16843008-16843011-firehol_level1"
+```
+
+```bash
+# Check if 9.9.9.9 is present (it is not)
+ZRANGEBYSCORE ip-blacklist-ranges 151587081 +inf
+> (empty list or set)
+```
+
+```bash
+# Check if 1.1.0.255 is present in one of the ranges  (it is not)
+ZRANGEBYSCORE ip-blacklist-ranges 16843007 +inf limit 0 1
+1) "ip-16843008-16843011-firehol_level1"
+```
+Now, since the start of the range is strictly higher than our IP, we can say that it is not included
+
+**NB:** This approach will work only if we don’t have overlapping range. In our case, it is true within one list but it is not the case across many lists.
+
+To solve this, we can use one set per list. The performance overhead will depend on how many lists we have to checks. Looking up one list is O(log n), looking up x lists will be x * O(log n)
+
