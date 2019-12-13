@@ -1,7 +1,7 @@
 # Blacklist service
 
 
-This is the MVP of a service which the possibility to check if an IP is un-trusted.
+This is the MVP of a service to check if an IP is un-trusted.
 As a source for the un-trusted IP address, we will use Firehol’s public list hosted on [GitHub](https://github.com/firehol/blocklist-ipsets). The service will update itself at a defined frequency to fetch the latest data from Firehol’s.
 
 
