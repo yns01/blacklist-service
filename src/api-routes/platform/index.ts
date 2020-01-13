@@ -6,7 +6,7 @@ const router: Router = Router()
 
 router.get('/healthz', (_req: Request, res: Response) => {
   res.status(200)
-  res.json({ status, dependencies: {} })
+  res.json({ dependencies: {} })
 })
 
 router.get('/metrics', (_req: Request, res: Response) => {
