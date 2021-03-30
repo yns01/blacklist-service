@@ -3295,9 +3295,9 @@ neo-async@^2.6.0:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.1.tgz#ac27ada66167fa8849a6addd837f6b189ad2081c"
 
-netmask@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/netmask/-/netmask-1.0.6.tgz#20297e89d86f6f6400f250d9f4f6b4c1945fcd35"
+netmask@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/netmask/-/netmask-2.0.1.tgz#5a5cbdcbb7b6de650870e15e83d3e9553a414cf4"
 
 nice-try@^1.0.4:
   version "1.0.5"
