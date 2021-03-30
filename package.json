@@ -72,7 +72,7 @@
     "express": "^4.17.1",
     "http-status-codes": "^1.4.0",
     "ioredis": "^4.14.1",
-    "netmask": "^1.0.6",
+    "netmask": "^2.0.1",
     "prom-client": "^11.5.3",
     "request": "^2.88.0",
     "stoppable": "^1.1.0",
